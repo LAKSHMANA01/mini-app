@@ -17,7 +17,6 @@ jobs:
             docker push $DOCKER_USERNAME/testapp:latest
 
 workflows:
-  build_and_deploy:
     jobs:
       - build_Docker_image:
          
