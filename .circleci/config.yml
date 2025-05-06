@@ -1,30 +1,30 @@
 version: 2.1
-jobs: 
-build_test:
+jobs:
+  build_test:
     docker:
       - image: circleci/node:12
     steps:
       - checkout
-      - run : 
+      - run:
           name: Install dependencies
           command: |
             npm install --save
-    build_Docker_image:
-      docker:
-        - image: circleci/node:12
-      steps:
-        - checkout
-        -setup_remote_docker:
-            docker_layer_caching:true
-        - run:
-            name: Build Docker image
-            command: |
-              docker build -t testapp -t smallprokect/testapp . echo $Docker_PASSWORD | docker login -u smallprokect --password-stdin docker push smallprokect/testapp:latest
+  build_Docker_image:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t testapp -t smallprokect/testapp .
+            echo $Docker_PASSWORD | docker login -u smallprokect --password-stdin
+            docker push smallprokect/testapp:latest
 
-workflows: 
+workflows:
   build_test:
-  jobs:
-    - build_test
-    - build_Docker_image
-       
-  
+    jobs:
+      - build_test
+      - build_Docker_image
