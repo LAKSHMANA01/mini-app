@@ -1,6 +1,5 @@
 version: 2.1
 jobs:
-  
   build_Docker_image:
     docker:
       - image: circleci/node:12
@@ -17,6 +16,6 @@ jobs:
             docker push $DOCKER_USERNAME/testapp:latest
 
 workflows:
+  build_and_push:
     jobs:
-      - build_Docker_image:
-         
+      - build_Docker_image
