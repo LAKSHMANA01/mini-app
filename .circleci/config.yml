@@ -8,6 +8,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            #!/bin/bash -eo pipefail
             npm install --save
   build_Docker_image:
     docker:
@@ -19,12 +20,15 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t testapp -t smallprokect/testapp .
-            echo $Docker_PASSWORD | docker login -u smallprokect --password-stdin
-            docker push smallprokect/testapp:latest
+            docker build -t testapp .
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            docker tag testapp $DOCKER_USERNAME/testapp:latest
+            docker push $DOCKER_USERNAME/testapp:latest
 
 workflows:
-  build_test:
+  build_and_deploy:
     jobs:
       - build_test
-      - build_Docker_image
+      - build_Docker_image:
+          requires:
+            - build_test
